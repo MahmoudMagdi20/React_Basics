@@ -30,59 +30,74 @@ import './App.css';
 //     </div>
 //   );
 // }
-let color ;
+
+class Toggle extends Component {
+
+  handleClick = () => {
+    this.props.onClick();
+  }
+
+  render() {
+    return (
+      <div>
+        <button onClick={this.handleClick}>
+          Toggle
+        </button>
+      </div>
+    );
+  }
+}
+
+class Color extends Component {
+
+  handleClick = () => {
+    this.props.onColorChange(document.getElementById('input').value);
+  }
+
+  render() {
+    return (
+      <div>
+        <input id="input" type="text"/>
+        <button onClick={this.handleClick}>
+          Change Color
+        </button>
+      </div>
+    );
+  }
+}
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {appear: true, color: 'black', clicked: false};
+    this.state = {display: 'block'};
   }
 
   toggle = () => {
-    this.setState((state, props) => ({
-      appear: !state.appear
-    }));
-  }
-
-  changeColor = (event) => {
-    this.setState({color: event.target.value});
-  }
-
-  changeColorClick = () => {
-    this.setState({clicked: true});
-  }
-
-  render() {
-    let display ;
-    if(this.state.appear == true)
+    if (this.state.display == 'block')
     {
-      display = 'block';
+      this.setState({display: 'none'});
     }
     else
     {
-      display = 'none';
+      this.setState({display: 'block'});
     }
-    if(this.state.clicked == true)
-    {
-      color = this.state.color;
-      this.state.clicked = false;
-    }
+  }
 
+  changeColor = (color) => {
+    document.getElementById('label').style.color = color;
+  }
+
+  render() {
     return (
       <div>
-        <button onClick={this.toggle}>
-          Toggle
-        </button>
-        <div style={{display: display }}>
+        <Toggle onClick={this.toggle} />
+        <div style={{display: this.state.display}}>
           <br />
           <br />
-          <input type="text" value={this.state.color} onChange={this.changeColor}/>
-          <button onClick={this.changeColorClick}>
-            Change Color
-          </button>
+          <Color onColorChange={this.changeColor} />
           <br />
           <br />
-          <p style={{color: color}}>Text....</p>
+          <p id="label" >Text....</p>
         </div>
       </div>
     );
